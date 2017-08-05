@@ -20,3 +20,7 @@ System.out.println(f.isDirectory());//true
 > CatalinaProperties
 默认从${catalina.base}/conf/catalina.properties文件中读取属性。可以通过"catalina.config"属性名设置属性。
 
+1. commonLoader
+parent ClassLoader为null。<br/>
+从CatalinaProperties中读取"common.loader"属性值。默认情况下值为：</br>`"${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar"`。</br>
+将里面的${属性名}替换为对应的值：</br>`"E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build/lib","E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build/lib/*.jar","E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build/lib","E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build/lib/*.jar"`。</br>
