@@ -52,3 +52,5 @@ private static URL buildClassLoaderUrl(File file) throws MalformedURLException {
                     }
                 });
 ```
+`new URLClassLoader()`可能会抛出`SecurityException`异常（if a security manager exists and its checkCreateClassLoader method doesn't allow creation of a class loader.）。使用`AccessController.doPrivileged`可以避免做权限检查。参考：http://www.blogjava.net/DLevin/archive/2012/11/02/390637.html</br>
+
