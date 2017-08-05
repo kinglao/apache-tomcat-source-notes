@@ -87,16 +87,16 @@
 
 5. 运行maven compile
 
-6. 运行ant deploy
+6. 运行ant deploy</br>
 会在output目录下生成输出。output/build就是从官网上下载的文件解压结果。
 
 如果ant运行失败，可能是下载的jar包有问题。一定要让ant运行成功。build.xml会有一些错误，不用管
 
-7. 启动
--Main class: org.apache.catalina.startup.Bootstrap
--Vm options: -Dcatalina.home="E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build"（指定一个目录即可）
+7. 启动</br>
+-Main class: org.apache.catalina.startup.Bootstrap</br>
+-Vm options: -Dcatalina.home="E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build"（指定一个目录即可）</br>
 
-8. 测试启动
+8. 测试启动</br>
 http://127.0.0.1:8080
 
 
