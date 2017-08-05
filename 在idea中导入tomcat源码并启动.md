@@ -1,0 +1,103 @@
+1.下载Tomcat源码，使用的是apache-tomcat-9.0.0.M17
+2.默认使用ant构建。但是ant没法自动下载依赖包
+3.使用maven添加依赖
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>groupId</groupId>
+    <artifactId>apache-tomcat-9.0.0.M17-src</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <build>
+        <finalName>Tomcat7.0</finalName>
+        <sourceDirectory>java</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>java</directory>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant-apache-log4j</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>ant</groupId>
+            <artifactId>ant-commons-logging</artifactId>
+            <version>1.6.5</version>
+        </dependency>
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.xml/jaxrpc-api -->
+        <dependency>
+            <groupId>javax.xml</groupId>
+            <artifactId>jaxrpc-api</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.jdt.core.compiler/ecj -->
+        <dependency>
+            <groupId>org.eclipse.jdt.core.compiler</groupId>
+            <artifactId>ecj</artifactId>
+            <version>4.6.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/junit/junit -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.easymock/easymock -->
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.4</version>
+        </dependency>
+    </dependencies>
+</project>
+```
+4.有些报错：
+点alt+回车就弄好了
+
+5.运行maven compile
+
+6.运行ant deploy
+会在output目录下生成输出。output/build就是从官网上下载的文件解压结果。
+
+如果ant运行失败，可能是下载的jar包有问题。一定要让ant运行成功。build.xml会有一些错误，不用管
+
+7.启动
+
+
+8.测试启动
+http://127.0.0.1:8080
+
+
+
+http://www.jianshu.com/p/d05ef74694f7
