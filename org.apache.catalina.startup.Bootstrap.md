@@ -12,7 +12,11 @@ System.out.println(userDir);//E:\apache-tomcat-9.0.0.M22-src
 System.out.println(f.getPath());//E:\apache-tomcat-9.0.0.M22-src\..
 System.out.println(f.isDirectory());//true
 ```
-注：windows下面，使用鼠标右键的方法是无法创建..的目录的
+注：windows下面，使用鼠标右键的方法是无法创建`..`的目录的
 ## main()
 ### 调用Bootstrap的init()方法
 #### initClassLoaders()
+主要创建了三个ClassLoader：commonLoader、catalinaLoader、sharedLoader
+> CatalinaProperties
+默认从${catalina.base}/conf/catalina.properties文件中读取属性。可以通过"catalina.config"属性名设置属性。
+
