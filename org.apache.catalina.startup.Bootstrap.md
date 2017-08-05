@@ -14,7 +14,9 @@ System.out.println(f.isDirectory());//true
 ```
 注：windows下面，使用鼠标右键的方法是无法创建`..`的目录的
 ## main()
+
 ### 调用Bootstrap的init()方法
+创建`Bootstrap`对象，调用`init()`方法进行初始化，将对象保存到`Bootstrap#daemon`中。
 #### initClassLoaders()
 主要创建了三个ClassLoader：commonLoader、catalinaLoader、sharedLoader
 > CatalinaProperties
@@ -39,7 +41,7 @@ private static URL buildClassLoaderUrl(File file) throws MalformedURLException {
 }
 ```
 例如，对于目录：`file:/E:/apache-tomcat-9.0.0.M22-src/apache-tomcat-9.0.0.M22-src/output/build/lib/`。对于jar包：`file:/E:/apache-tomcat-9.0.0.M22-src/apache-tomcat-9.0.0.M22-src/output/build/lib/annotations-api.jar`。</br>
-最后调用如下代码创建出ClassLoader：
+最后调用如下代码创建出ClassLoader。其中array保存了上面提到的`URL`对象。
 ```java
         return AccessController.doPrivileged(
                 new PrivilegedAction<URLClassLoader>() {
@@ -53,4 +55,19 @@ private static URL buildClassLoaderUrl(File file) throws MalformedURLException {
                 });
 ```
 `new URLClassLoader()`可能会抛出`SecurityException`异常（if a security manager exists and its checkCreateClassLoader method doesn't allow creation of a class loader.）。使用`AccessController.doPrivileged`可以避免做权限检查。参考：http://www.blogjava.net/DLevin/archive/2012/11/02/390637.html</br>
+2. catalinaLoader
+同上。对应属性名"server.loader"，parent ClassLoader是commonLoader。默认情况下属性值为空，则值为parent，即commonLoader
+3. sharedLoader
+同上。对应属性名"shared.loader"，parent ClassLoader是commonLoader。默认情况下属性值为空，则值为parent，即commonLoader
+#### Thread.currentThread().setContextClassLoader(catalinaLoader);
 
+#### SecurityClassLoad.securityClassLoad(catalinaLoader);
+如果`System.getSecurityManager()`不为null时，会调用`catalinaLoader.loadClass()`方法，加载一系列的类。默认情况是null
+
+#### init()方法最后一步
+1. 加载类`Class<?> startupClass = catalinaLoader.loadClass("org.apache.catalina.startup.Catalina")`
+2. 创建实例`Object startupInstance = startupClass.newInstance();`
+3. 通过反射，调用的`Catalina#setParentClassLoader()`方法。方法的参数是`sharedLoader`
+4. 将`startupInstance`保存到`Bootstrap#catalinaDaemon`中
+
+### 
