@@ -24,3 +24,8 @@ System.out.println(f.isDirectory());//true
 parent ClassLoader为null。<br/>
 从CatalinaProperties中读取"common.loader"属性值。默认情况下值为：</br>`"${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar"`。</br>
 将里面的${属性名}替换为对应的值：</br>`"E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build/lib","E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build/lib/*.jar","E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build/lib","E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build/lib/*.jar"`。</br>
+可以看到其实是四个目录。然后进行分类：
+* RepositoryType.URL     new URL()没有异常
+* RepositoryType.GLOB    \*.jar   通配符
+* RepositoryType.JAR     .jar     单个jar包
+* RepositoryType.DIR     其他     目录
