@@ -1,5 +1,5 @@
 org.apache.catalina.startup.Bootstrap.java是Tomcat的入口。
-1. 首先，static{}中：
+## static{}
 读取"catalina.home"属性的值。对应的目录对象(File)保存为Bootstrap#catalinaHomeFile。
 如果"catalina.home"不存在，指向系统属性${user.dir}，就是工程根目录。或者${user.dir}/../目录，如果${user.dir}下面有bootstrap.jar文件。
 读取"catalina.base"属性的值。对应的目录对象(File)保存为Bootstrap#catalinaBaseFile。
@@ -13,4 +13,5 @@ System.out.println(f.getPath());//E:\apache-tomcat-9.0.0.M22-src\..
 System.out.println(f.isDirectory());//true
 ```
 
-2. main()中
+## main()
+### 调用Bootstrap的init()方法
