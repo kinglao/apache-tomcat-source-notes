@@ -1,6 +1,6 @@
-1.下载Tomcat源码，使用的是apache-tomcat-9.0.0.M17
-2.默认使用ant构建。但是ant没法自动下载依赖包
-3.使用maven添加依赖
+1. 下载Tomcat源码，使用的是apache-tomcat-9.0.0.M17
+2. 默认使用ant构建。但是ant没法自动下载依赖包
+3. 使用maven添加依赖
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -82,22 +82,23 @@
     </dependencies>
 </project>
 ```
-4.有些报错：
+4. 有些报错：
 点alt+回车就弄好了
 
-5.运行maven compile
+5. 运行maven compile
 
-6.运行ant deploy
+6. 运行ant deploy
 会在output目录下生成输出。output/build就是从官网上下载的文件解压结果。
 
 如果ant运行失败，可能是下载的jar包有问题。一定要让ant运行成功。build.xml会有一些错误，不用管
 
-7.启动
+7. 启动
+-Main class: org.apache.catalina.startup.Bootstrap
+-Vm options: -Dcatalina.home="E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build"（指定一个目录即可）
 
-
-8.测试启动
+8. 测试启动
 http://127.0.0.1:8080
 
 
-
+参考：</br>
 http://www.jianshu.com/p/d05ef74694f7
