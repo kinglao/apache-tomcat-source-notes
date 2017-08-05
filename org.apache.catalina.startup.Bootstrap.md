@@ -29,3 +29,26 @@ parent ClassLoader为null。<br/>
 * RepositoryType.GLOB    \*.jar   通配符
 * RepositoryType.JAR     .jar     单个jar包
 * RepositoryType.DIR     其他     目录
+将目录或者文件转换为`URL`对象保存起来:
+```java
+private static URL buildClassLoaderUrl(File file) throws MalformedURLException {
+    // Could be a directory or a file
+    String fileUrlString = file.toURI().toString();
+    fileUrlString = fileUrlString.replaceAll("!/", "%21/");
+    return new URL(fileUrlString);
+}
+```
+例如，对于目录：`file:/E:/apache-tomcat-9.0.0.M22-src/apache-tomcat-9.0.0.M22-src/output/build/lib/`。对于jar包：`file:/E:/apache-tomcat-9.0.0.M22-src/apache-tomcat-9.0.0.M22-src/output/build/lib/annotations-api.jar`。</br>
+最后调用如下代码创建出ClassLoader：
+```java
+        return AccessController.doPrivileged(
+                new PrivilegedAction<URLClassLoader>() {
+                    @Override
+                    public URLClassLoader run() {
+                        if (parent == null)
+                            return new URLClassLoader(array);
+                        else
+                            return new URLClassLoader(array, parent);
+                    }
+                });
+```
