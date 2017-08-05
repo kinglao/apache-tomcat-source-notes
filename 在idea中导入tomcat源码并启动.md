@@ -82,14 +82,13 @@
     </dependencies>
 </project>
 ```
-4. 有些报错：
+4. 有些报错：</br>
 点alt+回车就弄好了
 
 5. 运行maven compile
 
 6. 运行ant deploy</br>
-会在output目录下生成输出。output/build就是从官网上下载的文件解压结果。
-
+会在output目录下生成输出。output/build就是从官网上下载的文件解压结果。</br>
 如果ant运行失败，可能是下载的jar包有问题。一定要让ant运行成功。build.xml会有一些错误，不用管
 
 7. 启动</br>
