@@ -81,8 +81,45 @@
 basedir="."表示${basedir}属性的值是build.xml的当前目录。通过查找build.xml中对`${tomcat.build}`属性的引用，可以观察到ant是如何生成output/build目录以及下面的一系列文件。</br>
 启动报错：`Error:java: Annotation processing is not supported for module cycles. Please ensure that all modules from cycle [WEB-INF,apache-tomcat-9.0.0.M17-src] are excluded from annotation processing`
 有循环依赖，在project structure里面看看。只要保留一个module就行：apache-tomcat-9.0.0.M17-src </br>
-还有一个问题：http://tomcat.10.x6.nabble.com/package-trailers-does-not-exist-td5064196.html. 文中作者的解决方法是：I added webapps/examples/WEB-INF/classes as a "Test Sources Root" and now it works.。我也遇到了，根本原因是需要运行build.xml中的"test-compile"，但是运行该target的时候报错：`javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
-ant的<get>标签可以从网络上下载文件：
+还有一个问题：http://tomcat.10.x6.nabble.com/package-trailers-does-not-exist-td5064196.html. 文中作者的解决方法是：I added webapps/examples/WEB-INF/classes as a "Test Sources Root" and now it works.。我也遇到了，查看build.xml中的"test-compile"：
+```xml
+  <path id="tomcat.test.classpath">
+    <pathelement location="${test.basedir}/webapps/examples/WEB-INF/classes"/>
+    <pathelement location="${test.classes}"/>
+    <pathelement location="${junit.jar}"/>
+    <pathelement location="${hamcrest.jar}"/>
+    <pathelement location="${easymock.jar}"/>
+    <pathelement location="${cglib.jar}"/>
+    <pathelement location="${objenesis.jar}"/>
+    <path refid="compile.classpath" />
+    <path refid="tomcat.classpath" />
+  </path>
+  <target name="test-compile" depends="compile,download-test-compile,compile-webapp-examples" >
+    <mkdir dir="${test.classes}"/>
+    <!-- Compile -->
+    <javac srcdir="test" destdir="${test.classes}"
+           debug="${compile.debug}"
+           deprecation="${compile.deprecation}"
+           source="${compile.source}"
+           target="${compile.target}"
+           encoding="ISO-8859-1"
+           includeantruntime="true">
+      <classpath refid="tomcat.test.classpath" />
+      <include name="org/apache/**" />
+      <include name="javax/**" />
+      <include name="util/**" />
+    </javac>
+    <copy todir="${test.classes}">
+        <fileset dir="test">
+          <include name="META-INF/**"/>
+          <include name="**/service-config.txt"/>
+        </fileset>
+    </copy>
+  </target>
+```
+可以看到`<classpath refid="tomcat.test.classpath" />`中是依赖`<pathelement location="${test.basedir}/webapps/examples/WEB-INF/classes"/>`下面的文件的。
+但是运行'test-compile'的时候报错：`javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
+ant的`<get>`标签可以从网络上下载文件：
 ```xml
   <target name="downloadfile" unless="exist" depends="testexist,setproxy">
     <!-- Download the file -->
@@ -106,6 +143,7 @@ base-tomcat.loc.2=${base-apache.loc.2}/tomcat
 base-sf.loc=http://downloads.sourceforge.net
 base-maven.loc=http://repo.maven.apache.org/maven2        
 ```
+所以就是在访问这些网址的时候出现了问题。
 
 8. 测试启动</br>
 http://127.0.0.1:8080 </br>
