@@ -96,13 +96,12 @@
 -Vm options: -Dcatalina.home="E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build"。output/build目录是运行ant命令创建的，而ant配置指定该目录是在build.xml中：
 ```xml
 <project name="Tomcat 9.0" default="deploy" basedir=".">
-<property name="tomcat.home"           value="${basedir}"/>
-<property name="tomcat.output"         value="${basedir}/output"/>
-<property name="tomcat.build"          value="${tomcat.output}/build"/>
+        <property name="tomcat.output"         value="${basedir}/output"/>
+        <property name="tomcat.build"          value="${tomcat.output}/build"/>
 ```
-basedir="."表示${basedir}属性的值是build.xml的当前目录。
+basedir="."表示${basedir}属性的值是build.xml的当前目录。</br>
 8. 测试启动</br>
-http://127.0.0.1:8080
+http://127.0.0.1:8080 </br>
 
 
 参考：</br>
