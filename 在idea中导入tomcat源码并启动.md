@@ -119,7 +119,7 @@ basedir="."表示${basedir}属性的值是build.xml的当前目录。通过查�
   </target>
 ```
 可以看到`<classpath refid="tomcat.test.classpath" />`中是依赖`<pathelement location="${test.basedir}/webapps/examples/WEB-INF/classes"/>`下面的文件的。
-* 但是运行'test-compile'的时候报错：`javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
+* 运行'test-compile'的时候报错：`javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
 ant的`<get>`标签可以从网络上下载文件：
 ```xml
   <target name="downloadfile" unless="exist" depends="testexist,setproxy">
