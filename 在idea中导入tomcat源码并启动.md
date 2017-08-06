@@ -11,28 +11,7 @@
     <groupId>groupId</groupId>
     <artifactId>apache-tomcat-9.0.0.M17-src</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <build>
-        <finalName>Tomcat7.0</finalName>
-        <sourceDirectory>java</sourceDirectory>
-        <resources>
-            <resource>
-                <directory>java</directory>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
+        
     <dependencies>
         <dependency>
             <groupId>ant</groupId>
@@ -103,6 +82,30 @@ basedir="."表示${basedir}属性的值是build.xml的当前目录。通过查�
 启动报错：`Error:java: Annotation processing is not supported for module cycles. Please ensure that all modules from cycle [WEB-INF,apache-tomcat-9.0.0.M17-src] are excluded from annotation processing`
 有循环依赖，在project structure里面看看。只要保留一个module就行：apache-tomcat-9.0.0.M17-src </br>
 还有一个问题：http://tomcat.10.x6.nabble.com/package-trailers-does-not-exist-td5064196.html. 文中作者的解决方法是：I added webapps/examples/WEB-INF/classes as a "Test Sources Root" and now it works.。我也遇到了，根本原因是需要运行build.xml中的"test-compile"，但是运行该target的时候报错：`javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
+ant的<get>标签可以从网络上下载文件：
+```xml
+  <target name="downloadfile" unless="exist" depends="testexist,setproxy">
+    <!-- Download the file -->
+    <local name="temp.file"/>
+    <mkdir dir="${base.path}"/>
+    <tempfile property="temp.file" destdir="${base.path}" prefix="download-" suffix=".tmp"/>
+    <get src="${sourcefile}" httpusecaches="${trydownload.httpusecaches}" dest="${temp.file}"/>
+    <mkdir dir="${destdir}"/>
+    <move file="${temp.file}" tofile="${destfile}"/>
+  </target>        
+```
+下载地址配置在build.prope
+```xml
+base-apache.loc.1=http://www.apache.org/dyn/closer.lua?action=download&filename=
+base-apache.loc.2=http://archive.apache.org/dist
+base-commons.loc.1=${base-apache.loc.1}/commons
+base-commons.loc.2=${base-apache.loc.2}/commons
+base-tomcat.loc.1=${base-apache.loc.1}/tomcat
+base-tomcat.loc.2=${base-apache.loc.2}/tomcat
+
+base-sf.loc=http://downloads.sourceforge.net
+base-maven.loc=http://repo.maven.apache.org/maven2        
+```
 
 8. 测试启动</br>
 http://127.0.0.1:8080 </br>
