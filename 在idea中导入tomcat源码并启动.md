@@ -100,6 +100,7 @@
         <property name="tomcat.build"          value="${tomcat.output}/build"/>
 ```
 basedir="."表示${basedir}属性的值是build.xml的当前目录。通过查找build.xml中对`${tomcat.build}`属性的引用，可以观察到ant是如何生成output/build目录以及下面的一系列文件。</br>
+
 8. 测试启动</br>
 http://127.0.0.1:8080 </br>
 
