@@ -62,7 +62,7 @@
 </project>
 ```
 4. 有些报错：</br>
-点alt+回车就弄好了
+试试：alt+回车
 
 5. 运行maven compile
 
@@ -79,9 +79,10 @@
         <property name="tomcat.build"          value="${tomcat.output}/build"/>
 ```
 basedir="."表示${basedir}属性的值是build.xml的当前目录。通过查找build.xml中对`${tomcat.build}`属性的引用，可以观察到ant是如何生成output/build目录以及下面的一系列文件。</br>
-启动报错：`Error:java: Annotation processing is not supported for module cycles. Please ensure that all modules from cycle [WEB-INF,apache-tomcat-9.0.0.M17-src] are excluded from annotation processing`
+* 启动报错：`Error:java: Annotation processing is not supported for module cycles. Please ensure that all modules from cycle [WEB-INF,apache-tomcat-9.0.0.M17-src] are excluded from annotation processing`
 有循环依赖，在project structure里面看看。只要保留一个module就行：apache-tomcat-9.0.0.M17-src </br>
-还有一个问题：http://tomcat.10.x6.nabble.com/package-trailers-does-not-exist-td5064196.html. 文中作者的解决方法是：I added webapps/examples/WEB-INF/classes as a "Test Sources Root" and now it works.。我也遇到了，查看build.xml中的"test-compile"：
+* 还有一个问题：http://tomcat.10.x6.nabble.com/package-trailers-does-not-exist-td5064196.html. 文中作者的解决方法是：I added webapps/examples/WEB-INF/classes as a "Test Sources Root" and now it works.。当然，还可以将该目录指定为"sources root"。</br>
+查看build.xml中的"test-compile"：
 ```xml
   <path id="tomcat.test.classpath">
     <pathelement location="${test.basedir}/webapps/examples/WEB-INF/classes"/>
@@ -118,7 +119,7 @@ basedir="."表示${basedir}属性的值是build.xml的当前目录。通过查�
   </target>
 ```
 可以看到`<classpath refid="tomcat.test.classpath" />`中是依赖`<pathelement location="${test.basedir}/webapps/examples/WEB-INF/classes"/>`下面的文件的。
-但是运行'test-compile'的时候报错：`javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
+* 但是运行'test-compile'的时候报错：`javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target`
 ant的`<get>`标签可以从网络上下载文件：
 ```xml
   <target name="downloadfile" unless="exist" depends="testexist,setproxy">
@@ -131,7 +132,7 @@ ant的`<get>`标签可以从网络上下载文件：
     <move file="${temp.file}" tofile="${destfile}"/>
   </target>        
 ```
-下载地址配置在build.prope
+下载地址配置在build.properties中
 ```xml
 base-apache.loc.1=http://www.apache.org/dyn/closer.lua?action=download&filename=
 base-apache.loc.2=http://archive.apache.org/dist
