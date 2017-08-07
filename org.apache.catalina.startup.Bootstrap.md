@@ -77,15 +77,15 @@ private static URL buildClassLoaderUrl(File file) throws MalformedURLException {
 #### void load(String[] arguments)
 调用`Catalina`类的`load()`方法，有两种重载形式：`void load()`和`load(String args[])`.
 
-解析${catalina.base}/build/conf/server.xml文件
-Digester:
-startDocument()
-startElement()
-qName:Server
+使用`Digester`解析${catalina.base}/build/conf/server.xml文件</br>
+startDocument()</br>
+startElement()</br>
+
+qName:Server</br>
 ```xml
 <Server port="8005" shutdown="SHUTDOWN">
 ```
-配置了两个属性
+配置了两个属性</br>
 有三个Rule：
 ```java
 //Catalina#createStartDigester()
@@ -93,6 +93,31 @@ digester.addObjectCreate("Server", "org.apache.catalina.core.StandardServer", "c
 digester.addSetProperties("Server");
 digester.addSetNext("Server", "setServer", "org.apache.catalina.Server");
 ```
-ObjectCreateRule
-从属性列表中查找"className"属性，没有设置则使用默认的`org.apache.catalina.core.StandardServer`.使用反射创建`StandardServer`实例，并保存到Digester的`ArrayStack<Object> stack`域中，Digester的`root`域保存的是`Catalina`实例。
+1. ObjectCreateRule
+从属性列表中查找"className"属性，没有设置则使用默认的`org.apache.catalina.core.StandardServer`.使用反射创建`StandardServer`实例，并保存到`Digester`的`ArrayStack<Object> stack`域中，Digester的`root`域保存的是`Catalina`实例。
+2. SetPropertiesRule
+调用`IntrospectionUtils.setProperty()`，使用反射的方式在`Digester#stack`栈顶元素上面调用`setXXX`方法，为属性设置值，例如`setPort(8005)`.</br>
+查找顺序：
+```java
+setFoo( String )
+setFoo ( int )
+setFoo ( long )
+setFoo ( boolean )
+setFoo ( InetAddress )
+setProperty("name", "value")
+```
+3. SetNextRule
+为空</br>
 
+qName:Listener
+`<Listener className="org.apache.catalina.startup.VersionLoggerListener" />`
+```java
+digester.addObjectCreate("Server/Listener",
+                         null, // MUST be specified in the element
+                         "className");
+digester.addSetProperties("Server/Listener");
+digester.addSetNext("Server/Listener",
+                    "addLifecycleListener",
+                    "org.apache.catalina.LifecycleListener");
+```
+endElement()
