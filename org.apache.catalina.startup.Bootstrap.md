@@ -71,8 +71,10 @@ private static URL buildClassLoaderUrl(File file) throws MalformedURLException {
 4. 将`startupInstance`保存到`Bootstrap#catalinaDaemon`中
 
 ### Bootstrap#main()的args[]参数列表
-根据Bootstrap#main()的args[]参数列表分别调用`Bootstrap#daemon`对应的方法。里面使用反射的方式，实际上调用的是`Bootstrap#catalinaDaemon`对应的方法。所以`Bootstrap`可以看做是`Catalina`的代理。
+根据Bootstrap#main()的args[]参数列表分别调用`Bootstrap#daemon`对应的方法。里面使用反射的方式，实际上调用的是`Bootstrap#catalinaDaemon`对应的方法。所以`Bootstrap`类可以看做是`Catalina`类的代理。
 #### setAwait(boolean await)
-
+调用`Catalina`类的`setAwait(boolean b)`，对`Catalina#await`域赋值
+#### void load(String[] arguments)
+调用`Catalina`类的`load()`方法，有两种重载形式：`void load()`和`load(String args[])`.
 
 
