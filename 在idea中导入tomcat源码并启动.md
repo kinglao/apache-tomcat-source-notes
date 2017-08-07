@@ -1,4 +1,4 @@
-1. 下载Tomcat源码，使用的是apache-tomcat-9.0.0.M17
+1. 下载Tomcat源码，使用的是apache-tomcat-9.0.0.M17 或者M22
 2. 默认使用ant构建。好像ant是由tomcat的作者开发的
 3. 使用maven添加依赖
 ```xml
