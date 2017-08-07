@@ -77,4 +77,22 @@ private static URL buildClassLoaderUrl(File file) throws MalformedURLException {
 #### void load(String[] arguments)
 调用`Catalina`类的`load()`方法，有两种重载形式：`void load()`和`load(String args[])`.
 
+解析${catalina.base}/build/conf/server.xml文件
+Digester:
+startDocument()
+startElement()
+qName:Server
+```xml
+<Server port="8005" shutdown="SHUTDOWN">
+```
+配置了两个属性
+有三个Rule：
+```java
+//Catalina#createStartDigester()
+digester.addObjectCreate("Server", "org.apache.catalina.core.StandardServer", "className");
+digester.addSetProperties("Server");
+digester.addSetNext("Server", "setServer", "org.apache.catalina.Server");
+```
+ObjectCreateRule
+从属性列表中查找"className"属性，没有设置则使用默认的`org.apache.catalina.core.StandardServer`.使用反射创建`StandardServer`实例，并保存到Digester的`ArrayStack<Object> stack`域中，Digester的`root`域保存的是`Catalina`实例。
 
