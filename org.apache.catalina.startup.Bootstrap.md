@@ -77,9 +77,9 @@ private static URL buildClassLoaderUrl(File file) throws MalformedURLException {
 #### void load(String[] arguments)
 调用`Catalina`类的`load()`方法，有两种重载形式：`void load()`和`load(String args[])`.
 load()方法的主要作用：
-* initDirs()
-* initNaming()
-* 使用`Digester`解析${catalina.base}/build/conf/server.xml文件</br>
+1. initDirs()
+2. initNaming()
+3. 使用`Digester`解析${catalina.base}/build/conf/server.xml文件</br>
 startDocument()</br>
 startElement()</br>
 例如：</br>
@@ -95,9 +95,9 @@ digester.addObjectCreate("Server", "org.apache.catalina.core.StandardServer", "c
 digester.addSetProperties("Server");
 digester.addSetNext("Server", "setServer", "org.apache.catalina.Server");
 ```
-1. ObjectCreateRule
+* ObjectCreateRule
 从属性列表中查找"className"属性，没有设置则使用默认的`org.apache.catalina.core.StandardServer`.使用反射创建`StandardServer`实例，并保存到`Digester`的`ArrayStack<Object> stack`域中，Digester的`root`域保存的是`Catalina`实例。
-2. SetPropertiesRule
+* SetPropertiesRule
 调用`IntrospectionUtils.setProperty()`，使用反射的方式在`Digester#stack`栈顶元素上面调用`setXXX`方法，为属性设置值，例如`setPort(8005)`.</br>
 查找顺序：
 ```java
@@ -108,9 +108,9 @@ setFoo ( boolean )
 setFoo ( InetAddress )
 setProperty("name", "value")
 ```
-3. SetNextRule
+* SetNextRule
 为空</br>
 在这一步中，解析`server.xml`的最外面的元素`<Server>`，使用反射的方式为`Catalina#server`赋值为一个`StandardServer`实例。解析`<Server>`的子元素，使用反射的方式为该`StandardServer`实例的成员变量赋值。
-* initStreams()
+4. initStreams()
 
-* StandardServer#init()方法
+5. StandardServer#init()方法
