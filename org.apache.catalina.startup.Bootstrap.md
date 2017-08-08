@@ -70,16 +70,18 @@ private static URL buildClassLoaderUrl(File file) throws MalformedURLException {
 3. 通过反射，调用的`Catalina#setParentClassLoader()`方法。方法的参数是`sharedLoader`
 4. 将`startupInstance`保存到`Bootstrap#catalinaDaemon`中
 
-### Bootstrap#main()的args[]参数列表
+### 处理Bootstrap#main()的args[]参数列表
 根据Bootstrap#main()的args[]参数列表分别调用`Bootstrap#daemon`对应的方法。里面使用反射的方式，实际上调用的是`Bootstrap#catalinaDaemon`对应的方法。所以`Bootstrap`类可以看做是`Catalina`类的代理。
 #### setAwait(boolean await)
 调用`Catalina`类的`setAwait(boolean b)`，对`Catalina#await`域赋值
 #### void load(String[] arguments)
 调用`Catalina`类的`load()`方法，有两种重载形式：`void load()`和`load(String args[])`.
-
-使用`Digester`解析${catalina.base}/build/conf/server.xml文件</br>
-startDocument()</br>
-startElement()</br>
+load()方法的主要作用：
+* initDirs()
+* initNaming()
+* 使用`Digester`解析${catalina.base}/build/conf/server.xml文件</br>
+- startDocument()</br>
+- startElement()</br>
 
 qName:Server</br>
 ```xml
@@ -120,4 +122,7 @@ digester.addSetNext("Server/Listener",
                     "addLifecycleListener",
                     "org.apache.catalina.LifecycleListener");
 ```
-endElement()
+等等。在这一步中，解析`server.xml`的最外面的元素`<Server>`，使用反射的方式为`Catalina#server`赋值为一个`StandardServer`实例。解析`<Server>`的子元素，使用反射的方式为该`StandardServer`实例的成员变量赋值。
+* initStreams()
+
+* StandardServer#init()方法
