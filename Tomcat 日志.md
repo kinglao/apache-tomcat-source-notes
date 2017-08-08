@@ -1,3 +1,4 @@
+## 日志配置
 想打开Tomcat日志，来看一下Digester解析过程。Tomcat使用的是jdk Logger。
 ```java
 public class ClassLoaderLogManager extends LogManager {
@@ -64,6 +65,108 @@ public class ClassLoaderLogManager extends LogManager {
 可以看到，如果我们指定了`java.util.logging.manager`属性值，则会根据指定的类创建`LogManager`实例，否则会调用默认的`new LogManager()`构造函数，而默认的`LogManager`会读取的文件`logging.properties`位于：${java.home}/lib/logging.properties。例如`D:\Program Files\Java\jdk1.8.0_91\jre\lib\logging.properties`。我们想要读取Tomcat自己的`logging.properties`，则需要更改配置`-Dcatalina.home="E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build" -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava.util.logging.config.file=E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build\conf\logging.properties`。这样的话，如果我们想看类`Digester`的输出日志，需要在`logging.properties`里面配置：`org.apache.tomcat.util.digester.Digester.level=FINE`</br>
 
 ` -Dorg.apache.juli.ClassLoaderLogManager.debug=true`的作用是如果设置为`true`，会通过`System.err.println()`输出错误信息。</br>
+## 日志的输出配置
+通过类`AsyncFileHandler`来控制日志的输出。`AsyncFileHandler`的父类`FileHandler#configure()`中指定了日志的输出位置
+```java
+private void configure() {
 
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        String tsString = ts.toString().substring(0, 19);
+        date = tsString.substring(0, 10);
+
+        String className = this.getClass().getName(); //allow classes to override
+
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+
+        // Retrieve configuration of logging file name
+        rotatable = Boolean.parseBoolean(getProperty(className + ".rotatable", "true"));
+        if (directory == null) {
+            directory = getProperty(className + ".directory", "logs");
+        }
+        if (prefix == null) {
+            prefix = getProperty(className + ".prefix", "juli.");
+        }
+        if (suffix == null) {
+            suffix = getProperty(className + ".suffix", ".log");
+        }
+        pattern = Pattern.compile("^(" + Pattern.quote(prefix) + ")\\d{4}-\\d{1,2}-\\d{1,2}("
+                + Pattern.quote(suffix) + ")$");
+        String sMaxDays = getProperty(className + ".maxDays", String.valueOf(DEFAULT_MAX_DAYS));
+        if (maxDays <= 0) {
+            try {
+                maxDays = Integer.parseInt(sMaxDays);
+            } catch (NumberFormatException ignore) {
+                // no-op
+            }
+        }
+        String sBufferSize = getProperty(className + ".bufferSize", String.valueOf(bufferSize));
+        try {
+            bufferSize = Integer.parseInt(sBufferSize);
+        } catch (NumberFormatException ignore) {
+            //no op
+        }
+        // Get encoding for the logging file
+        String encoding = getProperty(className + ".encoding", null);
+        if (encoding != null && encoding.length() > 0) {
+            try {
+                setEncoding(encoding);
+            } catch (UnsupportedEncodingException ex) {
+                // Ignore
+            }
+        }
+
+        // Get logging level for the handler
+        setLevel(Level.parse(getProperty(className + ".level", "" + Level.ALL)));
+
+        // Get filter configuration
+        String filterName = getProperty(className + ".filter", null);
+        if (filterName != null) {
+            try {
+                setFilter((Filter) cl.loadClass(filterName).newInstance());
+            } catch (Exception e) {
+                // Ignore
+            }
+        }
+
+        // Set formatter
+        String formatterName = getProperty(className + ".formatter", null);
+        if (formatterName != null) {
+            try {
+                setFormatter((Formatter) cl.loadClass(formatterName).newInstance());
+            } catch (Exception e) {
+                // Ignore and fallback to defaults
+                setFormatter(new OneLineFormatter());
+            }
+        } else {
+            setFormatter(new OneLineFormatter());
+        }
+
+        // Set error manager
+        setErrorManager(new ErrorManager());
+
+    }
+```
+代码中对日志的输出位置和formatter进行了设置。其中的`className`的值是：`org.apache.juli.AsyncFileHandler`。所以在`logging.properties`文件中就可以查找到对应的值。
+```xml
+1catalina.org.apache.juli.AsyncFileHandler.level = FINE
+1catalina.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+1catalina.org.apache.juli.AsyncFileHandler.prefix = catalina.
+1catalina.org.apache.juli.AsyncFileHandler.maxDays = 90
+
+2localhost.org.apache.juli.AsyncFileHandler.level = FINE
+2localhost.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+2localhost.org.apache.juli.AsyncFileHandler.prefix = localhost.
+2localhost.org.apache.juli.AsyncFileHandler.maxDays = 90
+
+3manager.org.apache.juli.AsyncFileHandler.level = FINE
+3manager.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+3manager.org.apache.juli.AsyncFileHandler.prefix = manager.
+3manager.org.apache.juli.AsyncFileHandler.maxDays = 90
+
+4host-manager.org.apache.juli.AsyncFileHandler.level = FINE
+4host-manager.org.apache.juli.AsyncFileHandler.directory = ${catalina.base}/logs
+4host-manager.org.apache.juli.AsyncFileHandler.prefix = host-manager.
+4host-manager.org.apache.juli.AsyncFileHandler.maxDays = 90
+```
 参考：</br>
 http://loveshisong.cn/%E7%BC%96%E7%A8%8B%E6%8A%80%E6%9C%AF/2015-06-04-java%E6%97%A5%E5%BF%97(%E4%BA%8C)JUL%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html
