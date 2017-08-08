@@ -4,4 +4,23 @@ public class ClassLoaderLogManager extends LogManager {
 }
 ```
 读取`output/build/conf/logging.properties`配置的调用关系：
-`ClassLoaderLogManager构造函数`--->`LogManager构造函数`--->`LogManager#ensureLogManagerInitialized()`--->`LogManager#readPrimordialConfiguration()`--->`ClassLoaderLogManager#readConfiguration()重载父类`--->`ClassLoaderLogManager#readConfiguration(ClassLoader classLoader)`
+`LogFactory#getLog(Class<?> clazz)`---> </br>
+`LogFactory#getInstance(Class<?> clazz)`---> </br>
+`LogFactory#getInstance(String name)`---> </br>
+`DirectJDKLog#getInstance(String name)`---> </br>
+`DirectJDKLog#DirectJDKLog(String name)`---> </br>
+`Logger#getLogger(String name)`---> </br>
+`Logger#demandLogger(String name, String resourceBundleName, Class<?> caller)`---> </br>
+`Logger#addLogger(Logger logger)`---> </br>
+`LoggerContext#addLocalLogger(Logger logger)`---> </br>
+`LoggerContext#requiresDefaultLoggers()`---> </br>
+`LogManager#ensureLogManagerInitialized()`---> </br>
+`LogManager#readPrimordialConfiguration()`---> </br>
+`ClassLoaderLogManager#readConfiguration()重载父类`---> </br>
+`ClassLoaderLogManager#readConfiguration(ClassLoader classLoader)` </br>
+或者 </br>
+`LogManager#getLogManager()`---> </br>
+`LogManager#ensureLogManagerInitialized()`---> </br>
+`LogManager#readPrimordialConfiguration()`---> </br>
+`ClassLoaderLogManager#readConfiguration()重载父类`---> </br>
+`ClassLoaderLogManager#readConfiguration(ClassLoader classLoader)` </br>
