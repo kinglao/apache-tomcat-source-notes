@@ -113,4 +113,4 @@ setProperty("name", "value")
 在这一步中，解析`server.xml`的最外面的元素`<Server>`，使用反射的方式为`Catalina#server`赋值为一个`StandardServer`实例。解析`<Server>`的子元素，使用反射的方式为该`StandardServer`实例的成员变量赋值。
 4. initStreams()
 
-5. StandardServer#init()方法
+5. Catalina#server#init()方法，Start the new server。
