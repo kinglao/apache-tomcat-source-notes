@@ -114,3 +114,40 @@ setProperty("name", "value")
 4. initStreams()
 
 5. Catalina#server#init()方法，Start the new server。
+调用`StandardServer#init()`方法。基本上其他的操作也是按照下面的三个方法执行，不同的操作`LifecycleState`的枚举值不一样，第二个方法不一样，但是都会在第二个方法前后各调用一次`setStateInternal()`。
+```java
+setStateInternal(LifecycleState.INITIALIZING, null, false);
+initInternal();
+setStateInternal(LifecycleState.INITIALIZED, null, false);
+```            
+`setStateInternal()`方法的作用主要是触发事件，调用`lifecycleEvent#fireLifecycleEvent()`方法：
+```java
+    protected void fireLifecycleEvent(String type, Object data) {
+        LifecycleEvent event = new LifecycleEvent(this, type, data);
+        for (LifecycleListener listener : lifecycleListeners) {
+            listener.lifecycleEvent(event);
+        }
+    }
+```
+对于`StandardServer`来说，`server.xml`默认配置中声明了5个`<Listener>`:
+```xml
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+```
+这5个`<Listener>`会加入到`lifecycleListeners`域中。但是运行的时候，`lifecycleListeners`中有6个元素，多出的一个是在`StandardServer`的构造函数中加入的：
+```java
+    public StandardServer() {
+        super();
+        globalNamingResources = new NamingResourcesImpl();
+        globalNamingResources.setContainer(this);
+        if (isUseNaming()) {
+            namingContextListener = new NamingContextListener();
+            addLifecycleListener(namingContextListener);
+        } else {
+            namingContextListener = null;
+        }
+    }
+```
