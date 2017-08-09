@@ -171,4 +171,7 @@ setStateInternal(LifecycleState.INITIALIZED, null, false);
     ...
 </Service>
 ```
-默认配置中只有一个Service，对应的类是：`StandardService`。类似的，依次调用子元素`engine`、`executors`、`mapperListener`、`connectors`的`init()`方法。
+默认配置中只有一个Service，对应的类是：`StandardService`。类似的，依次调用子元素`engine`、`executors`、`mapperListener`、`connectors`的`init()`方法。</br>
+`server.xml`中每一个节点都对应一个类，这些类都是`LifecycleBase`的子类。使用`Digester`类从xml文件中创建了对应的类的实例。</br>
+并且使用了模板方法模式，在`LifecycleBase`类中定义了一些模板方法：`init()`、`start()`、`stop()`、`destroy()`，并且在模板方法中调用了抽象方法：`initInternal()`、`startInternal()`、`stopInternal()`、`destroyInternal()`，子类分别实现。
+
