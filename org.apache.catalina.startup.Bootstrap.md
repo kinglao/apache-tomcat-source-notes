@@ -175,3 +175,14 @@ setStateInternal(LifecycleState.INITIALIZED, null, false);
 `server.xml`中每一个节点都对应一个类，这些类都是`LifecycleBase`的子类。使用`Digester`类从xml文件中创建了对应的类的实例。</br>
 并且使用了模板方法模式，在`LifecycleBase`类中定义了一些模板方法：`init()`、`start()`、`stop()`、`destroy()`，并且在模板方法中调用了抽象方法：`initInternal()`、`startInternal()`、`stopInternal()`、`destroyInternal()`，子类分别实现。
 
+#### start()
+Bootstrap#start()--->
+Catalina#start()--->
+LifecycleBase#start()--->
+StandardServer#startInternal--->
+各个子元素对应类的#start()方法--->
+各个子元素对应类的#startInternal()方法--->
+#### stop()
+同理
+#### stopServer()
+同理。调用stop()
