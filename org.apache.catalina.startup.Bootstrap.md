@@ -176,12 +176,12 @@ setStateInternal(LifecycleState.INITIALIZED, null, false);
 并且使用了模板方法模式，在`LifecycleBase`类中定义了一些模板方法：`init()`、`start()`、`stop()`、`destroy()`，并且在模板方法中调用了抽象方法：`initInternal()`、`startInternal()`、`stopInternal()`、`destroyInternal()`，子类分别实现。
 
 #### start()
-Bootstrap#start()--->
-Catalina#start()--->
-LifecycleBase#start()--->
-StandardServer#startInternal--->
-各个子元素对应类的#start()方法--->
-各个子元素对应类的#startInternal()方法--->
+Bootstrap#start()---></br>
+Catalina#start()---></br>
+LifecycleBase#start()---></br>
+StandardServer#startInternal---></br>
+各个子元素对应类的#start()方法---></br>
+各个子元素对应类的#startInternal()方法---></br>
 #### stop()
 同理
 #### stopServer()
