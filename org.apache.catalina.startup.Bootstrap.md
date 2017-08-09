@@ -171,3 +171,4 @@ setStateInternal(LifecycleState.INITIALIZED, null, false);
     ...
 </Service>
 ```
+默认配置中只有一个Service，对应的类是：`StandardService`。类似的，依次调用子元素`engine`、`executors`、`mapperListener`、`connectors`的`init()`方法。
