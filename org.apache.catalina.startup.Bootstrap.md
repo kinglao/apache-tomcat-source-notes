@@ -151,3 +151,23 @@ setStateInternal(LifecycleState.INITIALIZED, null, false);
         }
     }
 ```
+`StandardServer#initInternal()`方法中：
+* register new StringCache()，为`StandardServer#onameStringCache`赋值
+* register new MBeanFactory()，为`StandardServer#onameMBeanFactory`赋值
+* 调用`StandardServer#globalNamingResources`的`init()`方法。`StandardServer#globalNamingResources`来自`server.xml`文件：
+```xml
+  <GlobalNamingResources>
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+              description="User database that can be updated and saved"
+              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+              pathname="conf/tomcat-users.xml" />
+  </GlobalNamingResources>
+```
+* 将`E:\apache-tomcat-9.0.0.M22-src\apache-tomcat-9.0.0.M22-src\output\build\lib`目录下面的jar包封装为`ManifestResource`，加入到`ExtensionValidator#containerManifestResources`域中
+* 调用`StandardServer#services`的`init()`方法。`StandardServer#services`来自`server.xml`文件：
+```xml
+<Service name="Catalina">
+    ...
+</Service>
+```
