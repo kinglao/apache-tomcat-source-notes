@@ -10,5 +10,5 @@ public final synchronized void init() throws LifecycleException {
 protected abstract void initInternal() throws LifecycleException;
 ```
 类似的还有`start()`--->`startInternal()`、`stop()`--->`stopInternal()`、`destroy()`--->`destroyInternal()`。只是在位置1处调用对应的`--->`后面的方法。但是`setStateInternal`方法是在调用前和调用后都会执行，不同的是`LifecycleState`的枚举值不同，`setStateInternal`方法的参数不同。</br>
-`setStateInternal`方法的作用主要是设置`LifecycleListener#LifecycleState`枚举值，而每一个`LifecycleListener#LifecycleState`枚举都对应一个`String`类型的`lifecycleEvent`。设置完成后触发对`lifecycleEvent`的处理：将`String`类型的`lifecycleEvent`封装为一个`LifecycleEvent`类型的对象，里面保存了`String`类型的`lifecycleEvent`、当前正在处理的的`LifecycleBase`对象、以及附加信息，然后遍历`LifecycleBase#lifecycleListeners`中的`LifecycleListener`，并且调用`LifecycleListener#lifecycleEvent`来处理感兴趣的Object上的感兴趣的event。
+`setStateInternal`方法的作用主要是设置`LifecycleListener#LifecycleState`枚举值，而每一个`LifecycleListener#LifecycleState`枚举都对应一个`String`类型的`lifecycleEvent`。设置完成后触发对`lifecycleEvent`的处理：将`String`类型的`lifecycleEvent`封装为一个`LifecycleEvent`类型的对象，里面保存了`String`类型的`lifecycleEvent`、当前正在处理的的`LifecycleBase`对象、以及附加信息，然后遍历`LifecycleBase#lifecycleListeners`中的`LifecycleListener`，并且调用`LifecycleListener#lifecycleEvent`来处理感兴趣的Object上的感兴趣的event。由于`lifecycleListeners`是在`server.xml`中每个元素的父类`LifecycleBase`中，所以可以对`server.xml`中每一个元素设置`<Listener>`监听器，并且指定对应的处理类。
 
