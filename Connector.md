@@ -18,10 +18,13 @@ digester.addSetNext("Server/Service/Connector",
 Tomcat默认支持两种协议：`HTTP/1.1`和`AJP/1.3`。在每种协议下，分别有两种接收请求的处理方式：APR和NIO。如果对APR进行了配置，会优先使用APR。因为APR效率更高。参考：http://blog.csdn.net/xyang81/article/details/51502766 、https://my.oschina.net/czg/blog/142616</br>
 ## http
 ### NIO
-`ProtocolHandler`类型是`org.apache.coyote.http11.Http11NioProtocol`、`org.apache.coyote.http11.Http11Nio2Protocol`，区别是一个使用NIO，第二个使用NIO2。主要的处理逻辑在`NioEndpoint`、`Nio2Endpoint`中
+`ProtocolHandler`类型是`org.apache.coyote.http11.Http11NioProtocol`、`org.apache.coyote.http11.Http11Nio2Protocol`，区别是一个使用NIO，第二个使用NIO2。使用`NioEndpoint`、`Nio2Endpoint`
 ### APR
-
+`ProtocolHandler`类型是`org.apache.coyote.http11.Http11AprProtocol`。使用`AprEndpoint`
 ## ajp
-
+### NIO
+`ProtocolHandler`类型是`org.apache.coyote.ajp.AjpNioProtocol`、`org.apache.coyote.ajp.AjpNio2Protocol`，区别是一个使用NIO，第二个使用NIO2。使用`NioEndpoint`、`Nio2Endpoint`
+### APR
+`ProtocolHandler`类型是`org.apache.coyote.ajp.AjpAprProtocol`。使用`AprEndpoint`
 
 
