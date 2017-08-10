@@ -13,5 +13,7 @@ digester.addRule("Server/Service/Connector",
 digester.addSetNext("Server/Service/Connector",
                    "addConnector","org.apache.catalina.connector.Connector");
 ```
-`Connector`对象的创建是在`ConnectorCreateRule`类中完成的。而`SetAllPropertiesRule`类的参数列表表示的是使用反射进行setProperties的时候应该忽略的参数，
-因为"executor"、"sslImplementationName"、"protocol"三个属性在`ConnectorCreateRule`类的时候就设置好了，所以在`SetAllPropertiesRule`类中会忽略这三个属性
+`Connector`对象的创建是在`ConnectorCreateRule`类中完成的。而`SetAllPropertiesRule`类的参数列表表示的是使用反射进行setProperties的时候应该忽略的参数，因为`executor`、`sslImplementationName`、`protocol`三个属性在`ConnectorCreateRule`类里面设置好了，所以在`SetAllPropertiesRule`类中会忽略这三个属性。   
+在`ConnectorCreateRule#begin()`方法中，调用了有参构造函数`Connector(String protocol)`，主要是根据传入的`protocol`，构造对应的`ProtocolHandler`。  
+
+
