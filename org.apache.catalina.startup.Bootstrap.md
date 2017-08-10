@@ -138,7 +138,7 @@ setStateInternal(LifecycleState.INITIALIZED, null, false);
   <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
   <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
 ```
-这5个`<Listener>`会加入到`lifecycleListeners`域中。但是运行的时候，`lifecycleListeners`中有6个元素，多出的一个是在`StandardServer`的构造函数中加入的：
+这5个`<Listener>`会加入到`lifecycleListeners`域中。但是运行的时候，`lifecycleListeners`中有6个元素，多出的一个是在`StandardServer`的构造函数中加入的（注意的是：`lifecycleListeners`是属于`LifecycleBase`类的，所以所有的元素都可以定义`<Listener>`）：
 ```java
     public StandardServer() {
         super();
