@@ -1,4 +1,4 @@
-在前面的文档中介绍过了，在`Bootstrap`、`Catalina`中调用`load()`方法中，使用`Digester`类将`server.xml`中的元素解析为对应的类（它们共同的父类是抽象的`LifecycleBase`），最后就是调用`server.xml`中顶级元素`<Server>`对应的类的`StandardServer`的`init()`方法（每个元素的默认对应的类都是以`Standard`开头，例如`<Service>`对应`StandardService`）。从顶级元素开始，从上到下，依次调用子元素的对应方法。而且使用了模板方法模式，在父抽象类中定义了模板方法，在模板方法中调用抽象方法，子类实现各自的抽象方法，例如对于`init()`：
+在前面的文档中介绍过了，在`Bootstrap`、`Catalina`中调用`load()`方法中，使用`Digester`类将`server.xml`中的元素解析为对应的类（它们共同的父类是抽象的`LifecycleBase`，默认的配置通过`Catalina#createStartDigester()`定义），最后就是调用`server.xml`中顶级元素`<Server>`对应的类的`StandardServer`的`init()`方法（每个元素的默认对应的类都是以`Standard`开头，例如`<Service>`对应`StandardService`）。从顶级元素开始，从上到下，依次调用子元素的对应方法。而且使用了模板方法模式，在父抽象类中定义了模板方法，在模板方法中调用抽象方法，子类实现各自的抽象方法，例如对于`init()`：
 ```java
 public final synchronized void init() throws LifecycleException {
     //...
