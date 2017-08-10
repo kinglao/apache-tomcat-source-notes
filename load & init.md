@@ -1,1 +1,14 @@
-在前面的文档中介绍过了，在`Bootstrap`、`Catalina`中调用`load()`方法中，使用`Digester`类将`server.xml`中的元素解析为对应的类，最后就是调用`StandardServer`的`init()`方法。对应于
+在前面的文档中介绍过了，在`Bootstrap`、`Catalina`中调用`load()`方法中，使用`Digester`类将`server.xml`中的元素解析为对应的类（它们共同的父类是抽象的`LifecycleBase`），最后就是调用`server.xml`中顶级元素`<Server>`对应的类的`StandardServer`的`init()`方法。从顶级元素开始，从上到下，依次调用子元素的对应方法。而且使用了模板方法模式，在父抽象类中定义了模板方法，在模板方法中调用抽象方法，子类实现各自的抽象方法，例如对于`init()`：
+```java
+public final synchronized void init() throws LifecycleException {
+    //...
+    setStateInternal(LifecycleState.INITIALIZING, null, false);
+    initInternal();// 1
+    setStateInternal(LifecycleState.INITIALIZED, null, false);
+    //...
+}
+protected abstract void initInternal() throws LifecycleException;
+```
+类似的还有`start()`--->`startInternal()`、`stop()`--->`stopInternal()`、`destroy()`--->`destroyInternal()`。只是在位置1处调用对应的`--->`后面的方法。但是`setStateInternal`方法是在调用前和调用后都会执行，不同的是`LifecycleState`的枚举值不同，`setStateInternal`方法的参数不同。</br>
+`setStateInternal`方法的作用主要是设置`LifecycleListener#LifecycleState`枚举值，而每一个`LifecycleListener#LifecycleState`枚举都对应一个`String`类型的`lifecycleEvent`。设置完成后触发对`lifecycleEvent`的处理：将`String`类型的`lifecycleEvent`封装为一个`LifecycleEvent`类型的对象，里面保存了`String`类型的`lifecycleEvent`、当前正在处理的的`LifecycleBase`对象、以及附加信息，然后遍历`LifecycleBase#lifecycleListeners`中的`LifecycleListener`，并且调用`LifecycleListener#lifecycleEvent`来处理感兴趣的Object上的感兴趣的event。
+
