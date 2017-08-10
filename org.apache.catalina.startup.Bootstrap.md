@@ -110,7 +110,8 @@ setProperty("name", "value")
 ```
 * SetNextRule
 为空</br>
-在这一步中，解析`server.xml`的最外面的元素`<Server>`，使用反射的方式为`Catalina#server`赋值为一个`StandardServer`实例。解析`<Server>`的子元素，使用反射的方式为该`StandardServer`实例的成员变量赋值。
+在这一步中，解析`server.xml`的最外面的元素`<Server>`，使用反射的方式为`Catalina#server`赋值为一个`StandardServer`实例。解析`<Server>`的子元素，使用反射的方式为该`StandardServer`实例的成员变量赋值。</br>
+解析的过程中，充分使用了`Digester`的`ArrayStack<Object> stack`作为栈，并使用`root`保存栈底元素（元素并没有重复保存在栈中）。
 4. initStreams()
 
 5. Catalina#server#init()方法，Start the new server。
