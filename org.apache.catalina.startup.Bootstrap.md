@@ -186,4 +186,6 @@ StandardServer#startInternal---></br>
 #### stop()
 同理
 #### stopServer()
-同理。调用stop()
+同理。调用stop()</br>
+
+基本上的操作类型有：load(init)、start、stop、await、destroy
