@@ -31,4 +31,10 @@ Tomcat默认支持两种协议：`HTTP/1.1`和`AJP/1.3`。在每种协议下，�
 ### APR
 `ProtocolHandler`类型是`org.apache.coyote.ajp.AjpAprProtocol`。使用`AprEndpoint`
 
-
+## `init()`
+在`Connector`的构造函数中已经创建了`ProtocolHandler`对象，接下来在`Connector`的`initInternal()`方法中，主要是为`ProtocolHandler`创建并设置一个适配器`CoyoteAdapter`，然后调用了`ProtocolHandler#init()`方法。
+`Connector#init()`---></br>
+`AbstractProtocol#init()`---></br>
+`AbstractEndpoint#init()`---></br>
+`bind()`</br>
+`bind()`是一个抽象方法。
