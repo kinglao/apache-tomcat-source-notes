@@ -34,7 +34,13 @@ Tomcat默认支持两种协议：`HTTP/1.1`和`AJP/1.3`。在每种协议下，�
 NIO:
 ```java
 ServerSocketChannel channel = ServerSocketChannel.open();
+serverSocketChannel.socket().bind(new InetSocketAddress(9999));
+
 // SocketChannel channel = SocketChannel.open();
+// socketChannel.connect(new InetSocketAddress("http://jenkov.com", 80));
+
+// DatagramChannel channel = DatagramChannel.open();// udp
+
 Selector selector = Selector.open();
 channel.configureBlocking(false);
 SelectionKey key = channel.register(selector, Selectionkey.OP_READ);
