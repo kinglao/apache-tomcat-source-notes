@@ -37,6 +37,6 @@ Tomcat默认支持两种协议：`HTTP/1.1`和`AJP/1.3`。在每种协议下，�
 `AbstractProtocol#init()`---></br>
 `AbstractEndpoint#init()`---></br>
 `bind()`</br>
-`bind()`是一个抽象方法。
-`NioEndpoint#bind()`
+`bind()`是一个抽象方法。</br>
+`NioEndpoint#bind()`</br>
 * initServerSocket().创建并设置`ServerSocketChannel`的属性，并在ip地址和端口号上进行bind。
