@@ -76,3 +76,4 @@ NIO2:
 `bind()`是一个抽象方法。</br>
 `NioEndpoint#bind()`</br>
 * initServerSocket().创建并设置`ServerSocketChannel`的属性，并在ip地址和端口号上进行bind。
+* NioSelectorPool#open() 如果`NioSelectorPool#SHARED`为`true`（默认为true，可以通过属性`org.apache.tomcat.util.net.NioSelectorShared`设置），会调用`Selector.open()`，将结果保存到`NioSelectorPool#SHARED_SELECTOR`，同时会创建一个`NioBlockingSelector`对象，并调用`NioBlockingSelector#open()`方法。这种情况下，`Selector`只有一个`NioSelectorPool#SHARED_SELECTOR`，是共享的。`NioBlockingSelector#open()`方法中，创建了一个`NioBlockingSelector.BlockPoller`类实例。`NioSelectorPool`是一个`Selector`池，
