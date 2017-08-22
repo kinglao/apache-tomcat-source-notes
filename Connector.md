@@ -31,39 +31,6 @@ Tomcat默认支持两种协议：`HTTP/1.1`和`AJP/1.3`。在每种协议下，�
 ### APR
 `ProtocolHandler`类型是`org.apache.coyote.ajp.AjpAprProtocol`。使用`AprEndpoint`
 
-> NIO
 
-```java
-ServerSocketChannel channel = ServerSocketChannel.open();
-serverSocketChannel.socket().bind(new InetSocketAddress(9999));
-
-// SocketChannel channel = SocketChannel.open();
-// socketChannel.connect(new InetSocketAddress("http://jenkov.com", 80));
-
-// DatagramChannel channel = DatagramChannel.open();// udp
-
-Selector selector = Selector.open();
-channel.configureBlocking(false);
-SelectionKey key = channel.register(selector, Selectionkey.OP_READ);
-while(true) {
-  int readyChannels = selector.select();
-  if(readyChannels == 0) continue;
-  Set selectedKeys = selector.selectedKeys();
-  Iterator keyIterator = selectedKeys.iterator();
-  while(keyIterator.hasNext()) {
-    SelectionKey key = keyIterator.next();
-    if(key.isAcceptable()) {
-        // a connection was accepted by a ServerSocketChannel.
-    } else if (key.isConnectable()) {
-        // a connection was established with a remote server.
-    } else if (key.isReadable()) {
-        // a channel is ready for reading
-    } else if (key.isWritable()) {
-        // a channel is ready for writing
-    }
-    keyIterator.remove();
-  }
-}
-```
 > NIO2
 
