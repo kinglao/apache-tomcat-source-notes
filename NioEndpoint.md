@@ -1,3 +1,39 @@
+`NioEndpoint`对应`NIO`
+> NIO
+
+```java
+ServerSocketChannel channel = ServerSocketChannel.open();
+serverSocketChannel.socket().bind(new InetSocketAddress(9999));
+
+// SocketChannel channel = SocketChannel.open();
+// socketChannel.connect(new InetSocketAddress("http://jenkov.com", 80));
+
+// DatagramChannel channel = DatagramChannel.open();// udp
+
+Selector selector = Selector.open();
+channel.configureBlocking(false);
+SelectionKey key = channel.register(selector, Selectionkey.OP_READ);
+while(true) {
+  int readyChannels = selector.select();
+  if(readyChannels == 0) continue;
+  Set selectedKeys = selector.selectedKeys();
+  Iterator keyIterator = selectedKeys.iterator();
+  while(keyIterator.hasNext()) {
+    SelectionKey key = keyIterator.next();
+    if(key.isAcceptable()) {
+        // a connection was accepted by a ServerSocketChannel.
+    } else if (key.isConnectable()) {
+        // a connection was established with a remote server.
+    } else if (key.isReadable()) {
+        // a channel is ready for reading
+    } else if (key.isWritable()) {
+        // a channel is ready for writing
+    }
+    keyIterator.remove();
+  }
+}
+```
+
 ## `init()`
 在`Connector`的构造函数中已经创建了`ProtocolHandler`对象，接下来在`Connector`的`initInternal()`方法中，主要是为`ProtocolHandler`创建并设置一个适配器`CoyoteAdapter`，然后调用了`ProtocolHandler#init()`方法。</br>
 `Connector#init()`---></br>
