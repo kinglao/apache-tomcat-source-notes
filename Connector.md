@@ -30,7 +30,3 @@ Tomcat默认支持两种协议：`HTTP/1.1`和`AJP/1.3`。在每种协议下，�
 `ProtocolHandler`类型是`org.apache.coyote.ajp.AjpNioProtocol`、`org.apache.coyote.ajp.AjpNio2Protocol`，区别是一个使用NIO，第二个使用NIO2。使用`NioEndpoint`、`Nio2Endpoint`
 ### APR
 `ProtocolHandler`类型是`org.apache.coyote.ajp.AjpAprProtocol`。使用`AprEndpoint`
-
-
-> NIO2
-
