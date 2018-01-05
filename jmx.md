@@ -10,7 +10,7 @@ public static void main(String args[]) {
 }
 ```
 
-启动web项目的时候，首先从`Bootstrap.java`一直到`StandardServer.initInternal()`
+启动web项目的时候（例如在idea里面运行web项目），首先入口还是`Bootstrap.java`，一直执行到`StandardServer.initInternal()`
 ```
 "main@1" prio=5 tid=0x1 nid=NA runnable
   java.lang.Thread.State: RUNNABLE
@@ -26,7 +26,7 @@ public static void main(String args[]) {
 	  at org.apache.catalina.startup.Bootstrap.load(Bootstrap.java:309)
 	  at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:492)
 ```
-在`StandardServer.initInternal()`中，创建并注册
+在`StandardServer.initInternal()`中，创建并注册`MBeanFactory`
 ```java
 protected void initInternal() throws LifecycleException {
     super.initInternal();
